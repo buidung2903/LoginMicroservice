@@ -3,6 +3,7 @@ using System;
 using LoginMicroservice.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LoginMicroservice.Models.Migrations
 {
     [DbContext(typeof(FFDbContext))]
-    partial class FFDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230601042303_AlterTableUsers")]
+    partial class AlterTableUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

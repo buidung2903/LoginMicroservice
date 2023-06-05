@@ -26,5 +26,7 @@ namespace LoginMicroservice.Models.Models
         [StringLength(100)]
         public string Email { get; set; }
         public DateTime? BirthDay { get; set; }
+        [StringLength(300)]
+        public string? UserId { get; set; }
     }
 }

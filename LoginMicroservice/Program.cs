@@ -1,12 +1,15 @@
+using LoginMicroservice.Services.Interfaces;
+using LoginMicroservice.Services.Services;
+using LoginMicroservice.Helpers.Config;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.OpenApi.Models;
 using System.Configuration;
 
 namespace LoginMicroservice
 {
     public class Program
     {
-        static string MyAllowSpecificOrigins = "AllowAll";
 
         public static void Main(string[] args)
         {
@@ -15,17 +18,20 @@ namespace LoginMicroservice
             var configuration = builder.Configuration;
 
             // Add services to the container.
-
+            builder.Services.Configure<FacebookConfig>(builder.Configuration.GetSection("Facebook"));
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            services.AddAuthentication().AddFacebook(facebookOptions =>
+
+            services.AddSingleton<IAuthService, AuthService>();
+            services.AddCors(o => o.AddPolicy("AllowAnyOrigin", builder =>
             {
-                IConfigurationSection facebookAuthNSection = configuration.GetSection("Authentication:Facebook");
-                facebookOptions.AppId = facebookAuthNSection["AppId"] ?? "1079338452912062";
-                facebookOptions.AppSecret = facebookAuthNSection["AppSecret"] ?? "5a7c8fc35b300adbd53559b4fe6c7297";
-            }).AddCookie();
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
             var app = builder.Build();
             
             // Configure the HTTP request pipeline.
@@ -35,9 +41,10 @@ namespace LoginMicroservice
                 app.UseSwaggerUI();
             }
             app.UseHttpsRedirection();
-            app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthorization();
-
+            // IMPORTANT: Make sure UseCors() is called BEFORE this
+            app.UseCors("AllowAnyOrigin");
+            app.UseCors(options => options.AllowAnyOrigin());
             app.MapControllers();
 
             app.Run();

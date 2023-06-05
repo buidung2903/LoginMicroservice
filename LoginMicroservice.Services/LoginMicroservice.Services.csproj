@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Facebook" Version="7.0.6" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LoginMicroservice.Helpers\LoginMicroservice.Helpers.csproj" />
+  </ItemGroup>
+
 </Project>

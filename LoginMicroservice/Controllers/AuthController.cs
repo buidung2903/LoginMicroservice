@@ -1,4 +1,5 @@
-﻿using DotNetOpenAuth.AspNet.Clients;
+﻿using Facebook;
+using LoginMicroservice.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,12 +9,21 @@ namespace LoginMicroservice.Controllers
 {
     public class AuthController : Controller
     {
-        [HttpPost("LoginWithFacebook")]
-        public async Task<IActionResult> LoginWithFacebook()
+        private readonly IAuthService _authService;
+
+        public AuthController(IAuthService authService)
         {
-           
-            //var loginUrl = fb.get
-            return Redirect("https://www.facebook.com/v17.0/dialog/oauth?client_id=1079338452912062&client_secret=5a7c8fc35b300adbd53559b4fe6c7297&redirect_uri=https://localhost:7042/LoginWithFacebook");
+            _authService = authService;
+        }
+
+        [HttpPost("FacebookRedirect")]
+        public IActionResult FacebookRedirect(string code)
+        {
+            if (_authService.FacebookRedirect(code))
+            {
+                return Ok("Login Success");
+            }
+            return Ok("Login Fail");
         }
     }
 }
